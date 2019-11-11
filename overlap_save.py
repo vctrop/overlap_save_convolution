@@ -52,33 +52,28 @@ class overlap_save:
         self.block_size = block_size
         
         
-    def circular_convolution(self):
-        """ Computes circular convolution theoresm using the fft """
+    # Irregular list flattening (Josh Lee, https://stackoverflow.com/a/2158522/6129362
+    def flatten(x):
+        if isinstance(x, collections.Iterable):
+            return [a for i in x for a in flatten(i)]
+        else:
+            return [x]
         
-        x_padded = x
-        h_padded = h
-        # Define flattening lambda (Alex Martelli)
-        flatten = lambda l: [item for sublist in l for item in sublist]
         
+    ## The periodic properties of DFT result in the circular convolution theorem for finite-support sequences,
+    #  which says that calculating the inverse DFT of the product of DFTs is equivalent to computing the linear convolution with one of the sequences periodically extended,
+    #  that is, the circular convolution of the sequences
+    def circular_convolution(self, x_block, h):
+        """ Computes circular convolution theorem using the fft """
         ## Padding
-        # Append zeroes in the beginning of x to make x_padded divisible by block_len 
-        x_padded.insert(0,[0]*(len(x) % self.block_len))
         # Append zeroes in the begining of h to equal h_padded and block_len sizes
-        h_padded.insert(0,[0]*(len(self.block_len)-len(h)))
-        print(x_padded)
+        h_padded = h
+        h_padded.append([0]*(len(x_block)-len(h)))
+        h_padded = flatten(h_padded)
         print(h_padded)
         
-        ## Flatten padding results
-        flatten(h_padded)
-        flatten(x_padded)
-        #h_padded = flatten(h_padded)       # ?
-        #x_padded = flatten(x_padded)  
-        print(x_padded)
-        print(h_padded)
-        
-        ## By circular convolution theorem, >>><<<
-        x_convolved = np.real(np.fft.ifft( np.fft.fft(x_padded) * np.fft.fft(h_padded) ))
-        
+        # From circular convolution theorem
+        x_convolved = np.real(np.fft.ifft( np.fft.fft(x_block) * np.fft.fft(h_padded) ))   
         return x_convolved
         
         
