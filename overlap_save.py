@@ -55,12 +55,12 @@ class overlap_save:
         
         
     # Irregular list flattening (Josh Lee, https://stackoverflow.com/a/2158522/6129362
-    def _flatten_list(self, x):
-        """ Flattens a list composed of lists and elements """
-        if isinstance(x, collections.Iterable):
-            return [a for i in x for a in self._flatten_list(i)]
-        else:
-            return [x]
+    # def _flatten_list(self, x):
+        # """ Flattens a list composed of lists and elements """
+        # if isinstance(x, collections.Iterable):
+            # return [a for i in x for a in self._flatten_list(i)]
+        # else:
+            # return [x]
         
         
     ## The periodic properties of DFT result in the circular convolution theorem for finite-support sequences,
@@ -86,8 +86,8 @@ class overlap_save:
         
         # In the beginning there is no past block to overlap from, so the first M-1 positions are set to zero
         x_padded = list(self.x)
-        x_padded.insert(0,[0]*(len(self.h) - 1))
-        x_padded = self._flatten_list(x_padded)
+        x_padded = [0]*(len(self.h) - 1) + x_padded
+        print(x_padded)
         
         # Defines convolution result
         y = []
