@@ -1,3 +1,22 @@
 #!python3
+# Test script for the overlap_save class
 
-import overlap_save
+from overlap_save import overlap_save
+
+# Declare the OS 
+os = overlap_save()
+
+# Define sequence x and filter impulse response h
+x = [3,-1,0,1,3,2,0,1,2,1]
+h = [1,1,1]
+
+# Set overlap-save signal and filter to be applied
+os.set_signals(x, h)
+
+# Define overlap-save block size
+os.set_block_size(5)
+
+# Compute convolution
+conv = os.overlap_save_convolution()
+
+print(conv)
