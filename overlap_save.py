@@ -87,7 +87,6 @@ class overlap_save:
         # In the beginning there is no past block to overlap from, so the first M-1 positions are set to zero
         x_padded = list(self.x)
         x_padded = [0]*(len(self.h) - 1) + x_padded
-        print(x_padded)
         
         # Defines convolution result
         y = []
@@ -104,14 +103,21 @@ class overlap_save:
             else:
                 x_block = x_padded[i : i + self.block_size]
             
-            print("X_bloc, y_local")
-            print(x_block)
             # The partial result for a given block is the circular convolution between the signal block and filter impulse response 
             y_local = self.circular_convolution(x_block, self.h)
+            print("X_block, y_local")
+            print(x_block)
             print(y_local)
-            print(len(self.h))
             
             # Keeps only values unnafected by the filter delay of circular convolution, achieving similar result as the linear convolution
             y.extend(y_local[len(self.h) - 1:])
         
         return y
+        
+        
+# Overlap-save convolution function wrapper to overlap_save class
+def os_convolve(x, h, block_size):
+    os = overlap_save()
+    os.set_signals(x, h)
+    os.set_block_size(block_size)
+    return os.overlap_save_convolution()
