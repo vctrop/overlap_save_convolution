@@ -2,7 +2,6 @@
 # Victor O. Costa (nov, 2019)
 
 import numpy as np
-import collections
 
 class overlap_save:
     """ Class containing the overlap-save algorithm for long 1D convolution betweem x and h signals """
